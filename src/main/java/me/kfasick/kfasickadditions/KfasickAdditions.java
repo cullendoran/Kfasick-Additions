@@ -46,7 +46,6 @@ public class KfasickAdditions extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onDisable() {
-        // Logic for disabling the plugin...
     }
 
     @Override
