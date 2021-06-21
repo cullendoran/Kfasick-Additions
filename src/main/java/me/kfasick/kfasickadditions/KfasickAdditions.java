@@ -1,5 +1,8 @@
 package me.kfasick.kfasickadditions;
 
+import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
+import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
+import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -14,13 +17,71 @@ import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 
+class FireCake extends SlimefunItem {
+
+    public FireCake(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+        super(category, item, recipeType, recipe);
+    }
+
+    @Override
+    public void preRegister() {
+        BlockUseHandler blockUseHandler = this::onBlockRightClick;
+        addItemHandler(blockUseHandler);
+
+        ItemUseHandler itemUseHandler = this::onItemUseRightClick;
+        addItemHandler(itemUseHandler);
+    }
+
+    private void onBlockRightClick(PlayerRightClickEvent event) {
+        // This will prevent the Player from eating this cake.
+        event.cancel();
+        // Now set the Player on fire for 5 seconds
+        event.getPlayer().setFireTicks(5 * 20);
+    }
+
+    private void onItemUseRightClick(PlayerRightClickEvent event) {
+        // Calling event.cancel() in here would prevent the cake
+        // from being placed down.
+        event.getPlayer().giveExpLevels(1);
+    }
+
+}
+
 public class KfasickAdditions extends JavaPlugin implements SlimefunAddon {
 
     @Override
     public void onEnable() {
         // Read something from your config.yml
         Config cfg = new Config(this);
+        class FireCake extends SlimefunItem {
 
+            public FireCake(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+                super(category, item, recipeType, recipe);
+            }
+
+            @Override
+            public void preRegister() {
+                BlockUseHandler blockUseHandler = this::onBlockRightClick;
+                addItemHandler(blockUseHandler);
+
+                ItemUseHandler itemUseHandler = this::onItemUseRightClick;
+                addItemHandler(itemUseHandler);
+            }
+
+            private void onBlockRightClick(PlayerRightClickEvent event) {
+                // This will prevent the Player from eating this cake.
+                event.cancel();
+                // Now set the Player on fire for 5 seconds
+                event.getPlayer().setFireTicks(5 * 20);
+            }
+
+            private void onItemUseRightClick(PlayerRightClickEvent event) {
+                // Calling event.cancel() in here would prevent the cake
+                // from being placed down.
+                event.getPlayer().giveExpLevels(1);
+            }
+
+        }
         NamespacedKey categoryId = new NamespacedKey(this, "kfasick_additions");
         CustomItem categoryItem = new CustomItem(Material.DIAMOND, "Kfasick Additions");
 
@@ -40,6 +101,8 @@ public class KfasickAdditions extends JavaPlugin implements SlimefunAddon {
         SlimefunItem sfItem = new SlimefunItem(category, itemStack, RecipeType.ENHANCED_CRAFTING_TABLE, recipe);
         sfItem.register(this);
         // Our item is now registered
+
+
 
 
     }
@@ -62,5 +125,5 @@ public class KfasickAdditions extends JavaPlugin implements SlimefunAddon {
          */
         return this;
     }
-
 }
+
