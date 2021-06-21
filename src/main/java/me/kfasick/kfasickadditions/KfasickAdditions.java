@@ -4,6 +4,7 @@ import io.github.thebusybiscuit.slimefun4.api.events.PlayerRightClickEvent;
 import io.github.thebusybiscuit.slimefun4.core.handlers.BlockUseHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import me.mrCookieSlime.Slimefun.cscorelib2.skull.SkullItem;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -17,35 +18,6 @@ import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 
-class FireCake extends SlimefunItem {
-
-    public FireCake(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
-        super(category, item, recipeType, recipe);
-    }
-
-    @Override
-    public void preRegister() {
-        BlockUseHandler blockUseHandler = this::onBlockRightClick;
-        addItemHandler(blockUseHandler);
-
-        ItemUseHandler itemUseHandler = this::onItemUseRightClick;
-        addItemHandler(itemUseHandler);
-    }
-
-    private void onBlockRightClick(PlayerRightClickEvent event) {
-        // This will prevent the Player from eating this cake.
-        event.cancel();
-        // Now set the Player on fire for 5 seconds
-        event.getPlayer().setFireTicks(5 * 20);
-    }
-
-    private void onItemUseRightClick(PlayerRightClickEvent event) {
-        // Calling event.cancel() in here would prevent the cake
-        // from being placed down.
-        event.getPlayer().giveExpLevels(1);
-    }
-
-}
 
 public class KfasickAdditions extends JavaPlugin implements SlimefunAddon {
 
@@ -53,57 +25,26 @@ public class KfasickAdditions extends JavaPlugin implements SlimefunAddon {
     public void onEnable() {
         // Read something from your config.yml
         Config cfg = new Config(this);
-        class FireCake extends SlimefunItem {
 
-            public FireCake(Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
-                super(category, item, recipeType, recipe);
-            }
-
-            @Override
-            public void preRegister() {
-                BlockUseHandler blockUseHandler = this::onBlockRightClick;
-                addItemHandler(blockUseHandler);
-
-                ItemUseHandler itemUseHandler = this::onItemUseRightClick;
-                addItemHandler(itemUseHandler);
-            }
-
-            private void onBlockRightClick(PlayerRightClickEvent event) {
-                // This will prevent the Player from eating this cake.
-                event.cancel();
-                // Now set the Player on fire for 5 seconds
-                event.getPlayer().setFireTicks(5 * 20);
-            }
-
-            private void onItemUseRightClick(PlayerRightClickEvent event) {
-                // Calling event.cancel() in here would prevent the cake
-                // from being placed down.
-                event.getPlayer().giveExpLevels(1);
-            }
-
-        }
         NamespacedKey categoryId = new NamespacedKey(this, "kfasick_additions");
-        CustomItem categoryItem = new CustomItem(Material.DIAMOND, "Kfasick Additions");
+        CustomItem categoryItem = new CustomItem(SkullItem.fromBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZWIwNjZlYWM4OGU3MzkwZTg5MzUzZGNhZDg4N2UwY2QxYWQxODUzYTI1ZDBhOWQ0OGI1YWZiYzVhMTk1ZTMwNiJ9fX0="), "Kfasick Additions");
 
         // Our custom Category
         Category category = new Category(categoryId, categoryItem);
 
         // The custom item for our SlimefunItem
-        SlimefunItemStack itemStack = new SlimefunItemStack("TESTING_ITEM", Material.EMERALD, "Testing Item Only", "", "Testing");
+        SlimefunItemStack itemStack = new SlimefunItemStack("BURNT_MOB", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2JjYmJmOTRkNjAzNzQzYTFlNzE0NzAyNmUxYzEyNDBiZDk4ZmU4N2NjNGVmMDRkY2FiNTFhMzFjMzA5MTRmZCJ9fX0=", "Burnt Mob Drops", "", "Mob drops that have been burned in a mob generator");
 
         // A 3x3 shape representing our recipe
         ItemStack[] recipe = {
-                new ItemStack(Material.DIAMOND),    null,                               new ItemStack(Material.DIAMOND),
-                null,                               SlimefunItems.CARBONADO,            null,
-                new ItemStack(Material.DIAMOND),    null,                               new ItemStack(Material.DIAMOND)
+                null,   null,   null,
+                null,   null,   null,
+                null,   null,   null
         };
 
-        SlimefunItem sfItem = new SlimefunItem(category, itemStack, RecipeType.ENHANCED_CRAFTING_TABLE, recipe);
+        SlimefunItem sfItem = new SlimefunItem(category, itemStack, RecipeType.NULL, recipe);
         sfItem.register(this);
         // Our item is now registered
-
-
-
 
     }
 
